@@ -32,10 +32,14 @@ function showuser {
 function createworkdir {
 # Создает директорию и ограничивает запись в нее 
     DIR="$1"
-    mkdir -p "$DIR" || error "$MSGBADDIR $DIR" "-2"
+    mkdir -p "$DIR" || error "$MSGBADDIR $DIR	" "-2"
+    chmod 755 "$DIR"
+    chown "$FULL" "$DIR"
+    chgrp "$FULL" "$DIR"
 }
 
 function getpair {
+
 # Сканирует эфир и отдает пару ip mac по ip в параметре $1
 	"$ARP" "$1" | sed -n '3p'
 }

@@ -1,9 +1,10 @@
 #!/bin/bash
+echo "STARRT" >> /etc/samba/log
+. "/etc/samba/conf"
+. "/etc/samba/msgs"
+. "/etc/samba/funcs"
 
-. ./conf
-. ./msgs
-. ./funcs
-
+log "$DATE - Called" "$LOGFILE"
 IP="$1"
 init_login "$IP"
 
@@ -25,6 +26,6 @@ LOG=$(ln -s "$DIR" "$SESS")
 
 SIZE=$(du -sLBM "$DIR" | awk '{print $1}')
 SIZE="${SIZE::${#SIZE}-1}"
-
+echo "smbfull"
 [ "$QUOTE" -gt "$SIZE" ] && error "$FULL" "0"
 error "$LIM" "0"
