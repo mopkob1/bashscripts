@@ -1,0 +1,49 @@
+function log {
+# Логирует либо на экран либо в файл, если вторым параметром дано имя файла
+	[ "$2" ] && echo -e "$1" >> "$2"
+	[ "$2" ] || echo -e "$1"
+}
+
+function error {
+    log "$1" "$3"
+    [ "$2" ] || exit -3
+    exit "$2"
+}
+
+function writeperm {
+# Записывает пользователя в конфиг системы
+    CF="$1";L="$2"; I="$3"; Q="$4"; M="$5"; C="$6";
+    mv "$CF" "$CF.tmp"
+    grep -v "$I" "$CF.tmp" > "$CF"
+    log "$L\t$I\t$Q\t$M\t#$C" "$CF"
+    rm "$CF.tmp"
+}
+function showuser {
+# Выводит параметры пользователя на экран.
+# если параметр $7, то вывод перенаправляется в файл 
+# с именем в параметре $7
+    log "User:\t\t$1" "$7"
+    log "IP:\t\t$2" "$7"
+    log "MAC:\t\t$4" "$7"
+    log "Quote:\t\t$3 Mb" "$7"
+    log "Comments:\t$5" "$7"
+    log "Work dir:\t$6" "$7"
+}
+function createworkdir {
+# Создает директорию и ограничивает запись в нее 
+    DIR="$1"
+    mkdir -p "$DIR" || error "$MSGBADDIR $DIR" "-2"
+}
+
+function getpair {
+# Сканирует эфир и отдает пару ip mac по ip в параметре $1
+	"$ARP" "$1" | sed -n '3p'
+}
+
+function init_add {
+    [ -e "$CONF" ] || log "$MSGHEADER" "$CONF"
+}
+function init_login {
+    mkdir -p "$SESSDIR" || error "$MSGBADDIR $DIR" "-2"
+    [ -L "$SESSDIR/$1" ] && rm "$SESSDIR/$1"
+}

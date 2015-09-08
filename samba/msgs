@@ -1,0 +1,9 @@
+MSGBADIP="IP not found! Turn on the workstation or put intently IP adress."
+
+MSGBADDIR="Can't create dir: "
+
+MSGHELPADD="Usage:\n\n\t$0 username\n\n\t when you put config in $CONF"
+MSGHELPADD=$MSGHELPADD"\n\n\n\t$0 username IPadress quote\n\n\tin command-line mode"
+MSGACCESSDENIDE="$DATE - Can't find IP-MAC pair in conf file:"
+MSGHEADER="#login	ip	quota(in MB)	mac	comments"
+MSGLOGINWARN="$DATE - User dir created on login:"
