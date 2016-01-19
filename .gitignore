@@ -5,6 +5,5 @@ convert
 gps
 install
 iptables
-netboot
 services
 ./samaba/smbusers

@@ -1,0 +1,18 @@
+INT_IFACE=eth0
+EXT_IFACE=wlan0
+INT_NET=192.168.5.0/24
+ROUTER=192.168.5.2
+DOMAIN="boot.local"
+DNS="8.8.8.8"
+FILE_UID=$(date "+%d%m%y%H%M")
+
+PTH_DHCP=/etc/dhcp/
+DHCP=dhcpd.conf
+SERV_DHCP=isc-dhcp-server
+DEF_DHCP="/etc/default/$SERV_DHCP"
+
+PTH_TFTP=/var/lib/tftpboot/
+PTH_SRC=./files/
+
+SOFT="$SERV_DHCP rcconf tftpd-hpa rsync"
+

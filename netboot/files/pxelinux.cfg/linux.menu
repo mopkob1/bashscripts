@@ -1,0 +1,8 @@
+LABEL Install Ubuntu 14.04amd64
+      MENU label ^Ubuntu 14.04amd64
+      KERNEL  ubuntu/amd64/linux
+      APPEND initrd=ubuntu/amd64/initrd.gz
+LABEL Install Ubuntu 14.04i386
+      MENU label ^Ubuntu 14.04i386
+      KERNEL  ubuntu/i386/linux
+      APPEND initrd=ubuntu/i386/initrd.gz
