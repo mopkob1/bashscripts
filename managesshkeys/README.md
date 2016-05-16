@@ -16,7 +16,8 @@ Update all "authorized_keys"-files in all  local directories listed in "list"
     Edit "list" and execute addkeys.sh
 
 # setkeys.sh
-Get all files from "./<host|hostname>/" path to "<host|hostname>:/root/.ssh/" listed in "list"
+Get all files from "./\<host\|hostname>\/" path to "\<host\|hostname\>:\/root\/.ssh\/" listed in "list"
+
     Edit "list" and execute addkeys.sh
 
 You can comment any line in "list" or "allinall". Simple put "#" in start or end of line.
