@@ -1,0 +1,9 @@
+WORK="/mnt/buildiso/work"
+CD="/mnt/buildiso/cd"
+SOURCE="/"
+
+EXCLUDE="./exclude.list"
+SOFT="./soft.list"
+LOG="build.log"
+FORMAT=squashfs
+FS_DIR=casper
