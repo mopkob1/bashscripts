@@ -67,11 +67,13 @@ STR=$(log "$CD" | sed 's/^\///g')"/"
 [ "$(grep $STR $EXCLUDE)" ] || log "$STR" "$EXCLUDE"
 
 log "\nBuilding new system ..."
-RES=$(rsync -av --one-file-system --exclude-from="$EXCLUDE" / ${WORK}/rootfs)
+RES=$(rsync -av --one-file-system --exclude-from="$EXCLUDE" ${SOURCE} ${WORK}/rootfs)
 log "$RES" "$LOG"
+
 mount  --bind /dev/ ${WORK}/rootfs/dev
 mount -t proc proc ${WORK}/rootfs/proc
 mount -t sysfs sysfs ${WORK}/rootfs/sys
+mount -t devpts devpts ${WORK}/rootfs/dev/pts
 log "Go to chroot" "$INDI"
 
 log "Copying scripts to new system ..."
@@ -92,7 +94,6 @@ umount ${WORK}/rootfs/sys
 kversion=`cd ${WORK}/rootfs/boot && ls -1 vmlinuz-* | tail -1 | sed 's@vmlinuz-@@'`
 cp -vp ${WORK}/rootfs/boot/vmlinuz-${kversion} ${CD}/${FS_DIR}/vmlinuz
 cp -vp ${WORK}/rootfs/boot/initrd.img-${kversion} ${CD}/${FS_DIR}/initrd.img
-cp -vp ${WORK}/rootfs/boot/memtest86+.bin ${CD}/boot
 mksquashfs ${WORK}/rootfs ${CD}/${FS_DIR}/filesystem.${FORMAT} -noappend
 echo -n $(sudo du -s --block-size=1 ${WORK}/rootfs | tail -1 | awk '{print $1}') | sudo tee ${CD}/${FS_DIR}/filesystem.size
 find ${CD} -type f -print0 | xargs -0 md5sum | sed "s@${CD}@.@" | grep -v md5sum.txt | sudo tee -a ${CD}/md5sum.txt

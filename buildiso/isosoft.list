@@ -1,2 +1,5 @@
 casper 
 lupin-casper
+dialog 
+dbus
+mkswap

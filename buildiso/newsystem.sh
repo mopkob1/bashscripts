@@ -44,17 +44,34 @@ function remove {
 
 help "$1"
 . ./vars
+
 [ -e "$INDI" ] || log "File '$INDI' - not found! Possible you are not in chroot ..." || exit 
 
 log "Making DNS ..."
 [ -e "$RMLIST" ] || log "File '$RMLIST' - not found!" || exit 
+
+mount none -t proc /proc
+mount none -t sysfs /sys
+mount none -t devpts /dev/pts
+
+export HOME=/root
+export LC_ALL=C
+
 processlist "$RMLIST" "rm" "br" "\t .... REMOVED." "\t .... NOT REMOVED!"
 log "nameserver 8.8.8.8" "/etc/resolv.conf"
+log "Making swap ..."
+dd if=/dev/zero of=/swapfile bs=2M count=1024
+mkswap /swapfile
 
 log "Updating package list ..."
 RES=$(apt-get -y update) || exit
 log "\nInstalling packages ..."
+
+
 processlist "$ISOSOFT" "install" "BRE" "\t.....OK" "\t.....NOT OK" || exit  #"apt -y install"
+
+dbus-uuidgen > /var/lib/dbus/machine-id
+
 
 log "Preparing new system ..."
 depmod -a $(uname -r)
@@ -63,6 +80,8 @@ update-initramfs -u -k $(uname -r)
 log "Cleaning new system ..."
 processlist "$RMLIST" "rm" "br" "\t .... REMOVED." "\t .... NOT REMOVED!"
 processlist "$COPY" "remove" "br" "\t .... REMOVED." "\t .... NOT REMOVED!"
+rm /var/lib/dbus/machine-id 
+rm -rf /tmp/*
 RES=$(apt-get -y clean)
 find /var/log -regex '.*?[0-9].*?' -exec rm -v {} \;
 
@@ -71,3 +90,4 @@ do
     cat /dev/null | tee $file
 done
 log "Type exit to finish chroot..."
+umount /proc /sys /dev/pts

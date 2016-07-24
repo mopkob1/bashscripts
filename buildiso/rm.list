@@ -1,5 +1,5 @@
 /etc/resolv.conf 
-/etc/fstab
+#/etc/fstab
 /root/.ssh/id_rsa
 /root/.ssh/id_rsa.pub
 #/etc/hostname

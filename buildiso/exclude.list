@@ -23,3 +23,5 @@ media/*
 #etc/lightdm/lightdm.conf 
 mnt/buildiso/work/
 mnt/buildiso/cd/
+opt/buildiso/work/
+opt/buildiso/cd/

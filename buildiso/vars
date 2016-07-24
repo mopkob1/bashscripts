@@ -1,7 +1,7 @@
-WORK="/mnt/buildiso/work"
-CD="/mnt/buildiso/cd"
-RESULT="/mnt/buildiso/result.iso"
-SOURCE="/"
+WORK="/opt/buildiso/work"
+CD="/opt/buildiso/cd"
+RESULT="/opt/buildiso/result.iso"
+SOURCE="192.168.122.50:/"
 
 EXCLUDE="./exclude.list"
 SOFT="./soft.list"
