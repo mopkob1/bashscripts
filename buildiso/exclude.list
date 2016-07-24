@@ -6,6 +6,7 @@ tmp/*
 lost+found 
 var/tmp/* 
 mnt/*
+etc/resolv.conf
 boot/grub/* 
 #root/* 
 var/mail/* 

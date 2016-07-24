@@ -37,6 +37,13 @@ awk -F'#' '{print $1}' "$1" | grep -E -v "(^#|#$|^$)" | sed 's/  / /g' | sed 's/
     done
     return 0
 }
+function copyfiles {
+    DST="${WORK}/rootfs"$(echo "${SCRIPTS}" | sed 's/\/$//g')"/"
+    cp "./$1" "$DST$1" 
+}
+function install {
+    apt-get -y install "$1"
+}
 help "$1"
 . ./vars
 
@@ -50,7 +57,7 @@ log "\nInstalling packages ..."
 #Параметры команды конвеера:
 #processlist <файл-список> <команда> [BREAK = если прирываемся при ошибке] [вывод при успехе команды] [вывод при не успехе команды] || exit
 # без || exit на конце комманды BREAK будет обрвать только конкретный вызов
-processlist "$SOFT" "echo" "BRE" "\t.....OK" "\t.....NOT OK" || exit  #"apt -y install"
+processlist "$SOFT" "install" "BRE" "\t.....OK" "\t.....NOT OK" || exit  #"apt -y install"
 
 log "\nFinding exclude list ..."
 [ -e "$EXCLUDE" ] || log "File '$EXCLUDE' - not found!" || exit 
@@ -65,10 +72,29 @@ log "$RES" "$LOG"
 mount  --bind /dev/ ${WORK}/rootfs/dev
 mount -t proc proc ${WORK}/rootfs/proc
 mount -t sysfs sysfs ${WORK}/rootfs/sys
-log "okk" ${WORK}/rootfs/opt/test
-pwd 
-cat /opt/test
+log "Go to chroot" "$INDI"
+
+log "Copying scripts to new system ..."
+processlist "$COPY" "copyfiles" "BREAK" "\t..... COPIED" "\t..... NOT COPIED!" || exit  #"apt -y install"
+
+message="\n\tType following commands:\n\t\tcd $SCRIPTS\n\t\t./newsystem.sh"
+log "$message"
+
+
+
 chroot ${WORK}/rootfs /bin/bash
-log "-----------------"
-pwd 
-cat /opt/test
+
+rm "$INDI"
+umount ${WORK}/rootfs/dev
+umount ${WORK}/rootfs/proc
+umount ${WORK}/rootfs/sys
+
+kversion=`cd ${WORK}/rootfs/boot && ls -1 vmlinuz-* | tail -1 | sed 's@vmlinuz-@@'`
+cp -vp ${WORK}/rootfs/boot/vmlinuz-${kversion} ${CD}/${FS_DIR}/vmlinuz
+cp -vp ${WORK}/rootfs/boot/initrd.img-${kversion} ${CD}/${FS_DIR}/initrd.img
+cp -vp ${WORK}/rootfs/boot/memtest86+.bin ${CD}/boot
+mksquashfs ${WORK}/rootfs ${CD}/${FS_DIR}/filesystem.${FORMAT} -noappend
+echo -n $(sudo du -s --block-size=1 ${WORK}/rootfs | tail -1 | awk '{print $1}') | sudo tee ${CD}/${FS_DIR}/filesystem.size
+find ${CD} -type f -print0 | xargs -0 md5sum | sed "s@${CD}@.@" | grep -v md5sum.txt | sudo tee -a ${CD}/md5sum.txt
+cat "${GRUB}" > ${CD}/boot/grub/grub.cfg
+grub-mkrescue -o "$RESULT" "${CD}"

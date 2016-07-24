@@ -1,9 +1,17 @@
 WORK="/mnt/buildiso/work"
 CD="/mnt/buildiso/cd"
+RESULT="/mnt/buildiso/result.iso"
 SOURCE="/"
 
 EXCLUDE="./exclude.list"
 SOFT="./soft.list"
+ISOSOFT="./isosoft.list"
+RMLIST="./rm.list"
+SCRIPTS="/opt/"
+COPY="./copy.list"
+GRUB="./grub.skel"
+INDI="./tmp"
+
 LOG="build.log"
 FORMAT=squashfs
 FS_DIR=casper
