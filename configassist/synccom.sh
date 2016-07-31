@@ -1,7 +1,7 @@
 #!/bin/bash
 
 LIST="./list"
-FROM="../../"
+FROM="/"
 TO="./"
 
 function sync {

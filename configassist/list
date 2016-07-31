@@ -1,2 +1,2 @@
-src/Entities/
-src/Resources/config/
+var/www/dev/ts/
+etc/apache2/
