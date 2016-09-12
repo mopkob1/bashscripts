@@ -1,0 +1,10 @@
+*
+!*.sh
+!*.md
+!.gitignore
+!conf.d
+!libs
+!miscs
+!prev
+!rules
+!vars
