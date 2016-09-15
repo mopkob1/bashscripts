@@ -4,4 +4,5 @@ function kindofdistr {
     [ "$(cat /etc/*release | grep -i ubuntu)" ] && log "ubuntu"
     [ "$(cat /etc/*release | grep -i centos)" ] && log "centos"
     [ "$(cat /etc/*release | grep -i debian)" ] && log "debian"
+    [ "$(cat /etc/*release | grep -E -i '(centos|debian|ubuntu)')" ] || log "universalos"
 }

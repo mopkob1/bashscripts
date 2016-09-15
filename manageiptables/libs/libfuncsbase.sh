@@ -3,7 +3,7 @@
 # Библиотека базовых функций для bash-скриптов
 
 function help {
-    . "$HELPMSG"
+    . $(buildpath "$HELPMSG" "$SPWD")
 
     message="$welcome"
     [ "$1" ] || message="$message$adds"
@@ -41,11 +41,6 @@ awk -F'#' '{print $1}' "$1" | grep -E -v "(^#|#$|^$)" | sed 's/  / /g' | sed 's/
     return 0;
 }
 
-# Процедура обрезает первый и последний '/' в пути и признак относительного пути './'
-function choppath {
-    echo "$1" | sed 's/\/$//g' | sed 's/^.//g' | sed 's/^\///g'
-}
-
 # Процедура загрузки дополнительных конфигурационных файлов
 function loadconfs {
     pth=$1
@@ -54,3 +49,12 @@ function loadconfs {
         . "$pth/$FILE"
     done
 }
+
+#
+function loadlibs(){
+    [ -d "$2" ] && pth=$(echo "$2" | sed 's/\/$//g')"/"
+    while read FILE; do
+        log "$pth$FILE"
+    done < $(cat "$1")
+}
+
