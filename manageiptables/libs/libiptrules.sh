@@ -18,7 +18,6 @@ function installscript {
         goal="$(buildpath "$MAINPATH" "$SPWD")"
         createlink "$link" "$goal"
     done
-    exit 0
     rm "$USRLINK" > /dev/null
     log '#!/bin/bash\n' "$USRLINK"
     log 'BACK=$(pwd)' "$USRLINK"
@@ -28,11 +27,9 @@ function installscript {
     chmod 760 "$USRLINK"
     rm $distro
     load4os
-    installpackages || {
-        log "universalos" "$distro"
-        log "$installationerr"
-        exit -5
-    }
+    installpackages
+    testpack || stopuniversal
+
     return 0
 }
 
@@ -46,4 +43,11 @@ function checkinstalled {
 # Загружает правила
 function loadrules {
     log "loadrules"
+}
+
+# Процедура прописывает признак универсальной OC и завершает скрипт
+function stopuniversal() {
+        log "universalos" "$distro"
+        log "$installationerr"
+        exit -5
 }

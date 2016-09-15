@@ -1,3 +1,5 @@
+NETFILTER="/usr/sbin/netfilter-persistent"
+
 # Процедура сохраняет текущее состояние правил
 function savestate {
     /usr/sbin/netfilter-persistent save
@@ -19,6 +21,13 @@ function commitstate {
 
 # Процедура доустанавливает необходимые пакеты
 function installpackages {
-    log "installpackages"
-    return -1
+    apt-get -y update || return -1
+    apt-get -y install iptables-persistent || return -2
+    return 0
+}
+
+# Процедура проверяет, запускается ли нужный пакет
+function testpack(){
+    $NETFILTER || return -1
+    return 0
 }

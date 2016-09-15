@@ -17,3 +17,8 @@ function commitstate {
 function installpackages {
     log "installpackages"
 }
+
+# Процедура проверяет, запускается ли нужный пакет
+function testpack(){
+    log "testpack"
+}

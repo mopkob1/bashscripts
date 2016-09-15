@@ -3,9 +3,13 @@
 # Библиотека базовых функций для bash-скриптов
 
 function help {
-    . $(buildpath "$HELPMSG" "$SPWD")
 
-    message="$welcome"
+    [ "$SPWD" ] && SPWD=$(pwd)
+    local pth=$(buildpath `dirname "$HELPMSG"` "$SPWD")
+    local file=$(basename "$HELPMSG")
+    loadconfs "$pth" "$file"
+
+    local message="$welcome"
     [ "$1" ] || message="$message$adds"
     [ "$1" = "--help" ] && message="$welcome$help"
     log "$message"
@@ -41,12 +45,26 @@ awk -F'#' '{print $1}' "$1" | grep -E -v "(^#|#$|^$)" | sed 's/  / /g' | sed 's/
     return 0;
 }
 
-# Процедура загрузки дополнительных конфигурационных файлов
+###
+# loadconfs - Процедура загрузки дополнительных конфигурационных файлов
+# $1 - Либо имя файла со списком загружаемых файлов (один параметр)
+#       либо путь к загружаемым файлам
+# $2 - Имя файла либо выражение REGEXP для загружаемых файлов
+###
 function loadconfs {
-    pth=$1
-    for FILE in $(ls "$pth" | grep -E ".conf$" )
+log "--------------------------------"
+    local list=""
+    local pth=""
+
+    [ "$2" ] || list=$(cat "$1")
+    [ "$2" ] && {
+        pth=$(echo "$1" | sed 's/\/$//g')"/"
+        [ -d "$pth" ] || log "No load path found: $pth" \
+                      && list=$(ls "$pth" | grep -E "$2")
+    }
+    for FILE in $(echo "$list")
     do
-        . "$pth/$FILE"
+        [ -e "$pth$FILE" ] && . "$pth$FILE" || log "Can't load $pth$FILE"
     done
 }
 
