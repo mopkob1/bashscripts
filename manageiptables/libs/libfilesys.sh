@@ -57,6 +57,10 @@ function checklink(){
 function createlink(){
     checkobject "$1" || return -1
     checkdir "$(buildpath $2)" || return -2
-    ln -s "$1" "$(buildpath $2)/$3" && return 0
+    ln -s "$1" "$(buildpath $2)/$3" 2> /dev/null && return 0
     return -3
+}
+# Возвращает экстеншен из имени файла
+function getext(){
+    basename "$1" | awk -F'.' '{print $2}'
 }

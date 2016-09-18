@@ -1,5 +1,10 @@
+
 # Процедура сохраняет текущее состояние правил
 function savestate {
+    /usr/sbin/netfilter-persistent save
+    RULESSAVEPATH
+    MAILPATH
+
     log "savestate"
 }
 
@@ -15,10 +20,10 @@ function commitstate {
 
 # Процедура доустанавливает необходимые пакеты
 function installpackages {
-    log "installpackages"
+    return 0
 }
 
 # Процедура проверяет, запускается ли нужный пакет
 function testpack(){
-    log "testpack"
+    return 0
 }

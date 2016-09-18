@@ -28,20 +28,21 @@ function log {
 # без || exit на конце комманды BREAK будет обрвать только конкретный вызов
 
 # Пример использования:
-#                       processlist "$ISOSOFT" "install" "BRE" "\t.....OK" "\t.....NOT OK" || exit  #"apt -y install"
+#                       processlist "$ISOSOFT" "install" "BRE" "\t.....OK" "\t.....NOT OK" #"apt -y install"
 # Процедура годится только для выполнения команд, которые не возвращают данных в скрипт
 
 function processlist {
-
-awk -F'#' '{print $1}' "$1" | grep -E -v "(^#|#$|^$)" | sed 's/  / /g' | sed 's/^ //g' | \
+    local PEXIT=""
+    local data=$(awk -F'#' '{print $1}' "$1" | grep -E -v "(^#|#$|^$)" | sed 's/  / /g' | sed 's/^ //g')
     while read LINE; do
-	R=$("$2" "$LINE") || EXIT="26"
-
-	[ "$4" ] && [ "$EXIT" ] || log "\t$LINE $4"
-	[ "$5" ] && [ "$EXIT" ] && log "\t$LINE $5"
-	[ "$4" ] || log "$R"
-	[ "$3" = "BREAK" ] && [ "$EXIT" ] &&  exit "$EXIT"
-    done
+        local R=$("$2" "$LINE") || PEXIT="26"
+        [ "$4" ] && ([ "$PEXIT" ] || log "\t$LINE $4")
+        [ "$5" ] && ([ "$PEXIT" ] && log "\t$LINE $5")
+        [ "$4" ] || ([ "$R" ] && log "$R")
+        [ "$3" = "BREAK" ] && {
+            [ "$PEXIT" ] &&  exit "$PEXIT"
+        }
+    done < <(echo $data)
     return 0;
 }
 
@@ -52,7 +53,6 @@ awk -F'#' '{print $1}' "$1" | grep -E -v "(^#|#$|^$)" | sed 's/  / /g' | sed 's/
 # $2 - Имя файла либо выражение REGEXP для загружаемых файлов
 ###
 function loadconfs {
-log "--------------------------------"
     local list=""
     local pth=""
 

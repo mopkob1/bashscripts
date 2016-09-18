@@ -9,3 +9,10 @@
 function install {
     apt-get -y install "$1"
 }
+
+#
+function echoline(){
+    A=3
+    return 0
+    #log "$1|$2|$3|$4"
+}

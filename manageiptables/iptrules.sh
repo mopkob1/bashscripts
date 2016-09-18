@@ -13,12 +13,11 @@ SPWD="/opt/bash/bashscripts/manageiptables"
 
 . ./libs/init.sh
 
+
+
+loadrules
+exit 0
 help "$1"
-loadconfs "./miscs/other.list"
-kindofdistr
-exit 0
-installscript
-exit 0
 checkinstalled && load4os || installscript
 savestate
 clearrules

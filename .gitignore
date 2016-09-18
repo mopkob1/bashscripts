@@ -7,3 +7,4 @@ install
 iptables
 services
 ./samaba/smbusers
+./buildiso/
