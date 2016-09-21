@@ -11,6 +11,25 @@ function load4os {
     loadconfs "$list"
 }
 
+# Загрузчик модуля обработки правила
+function loadhandler {
+    local ext="$1"
+    [ "$1" ] || ext="bash"
+    local module="MODULE_$(echo $ext | sed 's/[[:lower:]]/\u&/g')"
+    [ "${!module}" ] && {
+        log "${!module}"
+        return 0
+    }
+    local file=$(buildpath "$MODULES" "$SPWD")"/module_$ext.pack"
+    loadconfs "$file"
+    [ "${!module}" ] && {
+        log "${!module}"
+        return 0
+    }
+    log "$loadmoduleerr$1 ($file)"
+    return -1
+}
+
 # Делает все необходимые действия для установки скрипта
 function installscript {
     local distro=$(buildpath "$DISTR" "$SPWD")
@@ -49,15 +68,16 @@ function loadrules {
     local data=$(ls "$pth")
 
     while read NAME; do
-        local proc=$(getext "$NAME" | loadhandler) || {
+        local ext=$(getext "$NAME")
+        local proc=$(loadhandler "$ext") || {
             log "$proc"
             continue
         }
-        log ok
+
         # Модуль загружен. Можно обрабатывать правила
         local result=" - rule loaded."
-        "$proc" "$NAME" || result=" - rule not loaded!"
-        log "$result"
+        #"$proc" "$NAME" || result=" - rule not loaded!"
+        log "$NAME $result"
     done < <(echo "$data")
 }
 
@@ -69,23 +89,4 @@ function stopuniversal() {
         log "$installationerr"
         exit -5
 }
-# Загрузчик модуля обработки правила
-function loadhandler(){
-    #local module_test="process"
-    [ "$1" ] && return 0
-    local module="module_$1"
-    local proc=${!module}
-    [ "$proc" ] && {
-        log "$proc"
-        return 0
-    }
-    local file=$(buildpath "$MODULES" "$SPWD")"/$module.pack"
-    loadconfs "$file"
-    proc=${!module}
-    [ "$proc" ] && {
-        log "$proc"
-        return 0
-    }
-    log "$loadmoduleerr$1"
-    return -1
-}
+

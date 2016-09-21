@@ -56,7 +56,9 @@ function loadconfs {
     local list=""
     local pth=""
 
-    [ "$2" ] || list=$(cat "$1")
+    [ "$2" ] || {
+        list=$(cat "$1") || return -1
+    }
     [ "$2" ] && {
         pth=$(echo "$1" | sed 's/\/$//g')"/"
         [ -d "$pth" ] || log "No load path found: $pth" \

@@ -9,12 +9,11 @@ SPWD="/opt/bash/bashscripts/manageiptables"
 . ./libs/libfilesys.sh
 . ./libs/libfuncspec.sh
 . ./libs/libiptrules.sh
-. ./libs/libuniversalos.sh
 
 . ./libs/init.sh
 
-
-
+#MODULE_BASH="test"
+log "-------------------------------------------"
 loadrules
 exit 0
 help "$1"
