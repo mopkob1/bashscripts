@@ -1,10 +1,13 @@
 *
 !*.sh
 !*.md
+!*.pack
+!*.msg
 !.gitignore
 !conf.d
 !libs
 !miscs
+!modules
 !prev
 !rules
 !vars
