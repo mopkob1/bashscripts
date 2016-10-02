@@ -8,4 +8,4 @@ START="$1"
 
 [ "$1" ] || START="8"
 [ "$2" ] || FINISH="63"
-for i in {"$START".."$FINISH"}; do if [ -e /dev/loop$i ]; then continue; fi; mknod /dev/loop$i b 7 $i; chown --reference=/dev/loop0 /dev/loop$i; chmod --reference=/dev/loop0 /dev/loop$i; done
+for i in "{$START..$FINISH}"; do if [ -e /dev/loop$i ]; then continue; fi; mknod /dev/loop$i b 7 $i; chown --reference=/dev/loop0 /dev/loop$i; chmod --reference=/dev/loop0 /dev/loop$i; done

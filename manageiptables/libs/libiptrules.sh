@@ -76,9 +76,12 @@ function loadrules {
 
         # Модуль загружен. Можно обрабатывать правила
         local result=" - rule loaded."
+        log "$proc"
+        ${proc}
         #"$proc" "$NAME" || result=" - rule not loaded!"
-        log "$NAME $result"
+        #log "$NAME $result"
     done < <(echo "$data")
+    testproc "kjdwhsk"
 }
 
 # Процедура прописывает признак универсальной OC и завершает скрипт
